@@ -640,7 +640,15 @@ public class Bytes {
             }
 
             char pc = code.charAt(64);
+
+            if (str.indexOf(pc) < str.length() - 2) {
+                throw new IllegalArgumentException("base642bytes: invalid input string");
+            }
+
             if (str.charAt(off + len - 2) == pc) {
+                if (str.charAt(off + len - 1) != pc) {
+                    throw new IllegalArgumentException("base642bytes: invalid input string");
+                }
                 size -= 2;
                 --num;
                 rem = 2;
@@ -728,10 +736,22 @@ public class Bytes {
             }
 
             char pc = code[64];
+
+            if (str.indexOf(pc) < str.length() - 2) {
+                throw new IllegalArgumentException("base642bytes: invalid input string");
+            }
+
             if (str.charAt(off + len - 2) == pc) {
+                if (str.charAt(off + len - 1) != pc) {
+                    throw new IllegalArgumentException("base642bytes: invalid input string");
+                }
                 size -= 2;
+                --num;
+                rem = 2;
             } else if (str.charAt(off + len - 1) == pc) {
                 size--;
+                --num;
+                rem = 3;
             }
         } else {
             if (rem == 2) {
