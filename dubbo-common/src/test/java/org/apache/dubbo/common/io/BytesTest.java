@@ -91,6 +91,19 @@ public class BytesTest {
     }
 
     @Test
+    public void testBase642bInvalidInputString() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Bytes.base642bytes("ZHViYm=8"));
+    }
+
+    @Test
+    public void testBase642bStringVsCharArr() {
+        byte[] stringCall = Bytes.base642bytes("ZHViYm8=", C64);
+        byte[] charArrCall = Bytes.base642bytes("ZHViYm8=", C64.toCharArray());
+
+        assertThat(stringCall, is(charArrCall));
+    }
+
+    @Test
     public void testHex() {
         String str = Bytes.bytes2hex(b1);
         assertThat(b1, is(Bytes.hex2bytes(str)));
