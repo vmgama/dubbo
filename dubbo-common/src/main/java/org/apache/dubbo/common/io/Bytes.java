@@ -614,71 +614,7 @@ public class Bytes {
      * @return byte array.
      */
     public static byte[] base642bytes(final String str, final int off, final int len, final String code) {
-        if (off < 0) {
-            throw new IndexOutOfBoundsException("base642bytes: offset < 0, offset is " + off);
-        }
-        if (len < 0) {
-            throw new IndexOutOfBoundsException("base642bytes: length < 0, length is " + len);
-        }
-        if (off + len > str.length()) {
-            throw new IndexOutOfBoundsException("base642bytes: offset + length > string length.");
-        }
-
-        if (code.length() < 64) {
-            throw new IllegalArgumentException("Base64 code length < 64.");
-        }
-
-        int rem = len % 4;
-        if (rem == 1) {
-            throw new IllegalArgumentException("base642bytes: base64 string length % 4 == 1.");
-        }
-
-        int num = len / 4, size = num * 3;
-        if (code.length() > 64) {
-            if (rem != 0) {
-                throw new IllegalArgumentException("base642bytes: base64 string length error.");
-            }
-
-            char pc = code.charAt(64);
-            if (str.charAt(off + len - 2) == pc) {
-                size -= 2;
-                --num;
-                rem = 2;
-            } else if (str.charAt(off + len - 1) == pc) {
-                size--;
-                --num;
-                rem = 3;
-            }
-        } else {
-            if (rem == 2) {
-                size++;
-            } else if (rem == 3) {
-                size += 2;
-            }
-        }
-
-        int r = off, w = 0;
-        byte[] b = new byte[size], t = decodeTable(code);
-        for (int i = 0; i < num; i++) {
-            int c1 = t[str.charAt(r++)], c2 = t[str.charAt(r++)];
-            int c3 = t[str.charAt(r++)], c4 = t[str.charAt(r++)];
-
-            b[w++] = (byte) ((c1 << 2) | (c2 >> 4));
-            b[w++] = (byte) ((c2 << 4) | (c3 >> 2));
-            b[w++] = (byte) ((c3 << 6) | c4);
-        }
-
-        if (rem == 2) {
-            int c1 = t[str.charAt(r++)], c2 = t[str.charAt(r++)];
-
-            b[w++] = (byte) ((c1 << 2) | (c2 >> 4));
-        } else if (rem == 3) {
-            int c1 = t[str.charAt(r++)], c2 = t[str.charAt(r++)], c3 = t[str.charAt(r++)];
-
-            b[w++] = (byte) ((c1 << 2) | (c2 >> 4));
-            b[w++] = (byte) ((c2 << 4) | (c3 >> 2));
-        }
-        return b;
+        return base642bytes(str, off, len, code.toCharArray());
     }
 
     /**
